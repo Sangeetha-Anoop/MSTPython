@@ -1,0 +1,652 @@
+!pip install mysql-connector-python
+
+import mysql.connector
+
+mydb=mysql.connector.connect(
+host="localhost", 
+user="root",
+password="",
+database="ems"
+)
+
+    
+def add_employee():
+    
+    
+    cursor=mydb.cursor()
+    id1=int(input("\nEmployee Id:"))
+    name=input("Employee Name:")
+    dept=input("Enter Department:")
+    salary=input("Enter Salary:")
+    mail=input("Enter Email-id:")
+    query="INSERT INTO EMPLOYEE(emp_id,emp_name,emp_dept,emp_salary,email) VALUES(%s,%s,%s,%s,%s)"
+    values=(id1,name,dept,salary,mail)
+    cursor.execute(query,values)
+    mydb.commit()
+    print("\nEmployee details added successfully!\n")
+    cursor.close()
+def sort_employee():
+    cursor=mydb.cursor()
+    print("\n1.Sort by Name\n2.Sort by Salary\n3.Sort by Department")
+    choice=int(input("\nEnter your choice:"))
+    if choice==1:
+        query="SELECT * from EMPLOYEE ORDER BY emp_name"
+        cursor.execute(query)
+        result=cursor.fetchall()
+        if result:
+            print("\nEmployees details sorting by Name..")
+            print("------------------------------------")
+            for row in result:
+                print("Name:",row[1])
+                print("Salary:",row[2])
+                print("Department:",row[3])
+                print("E-mail:",row[4])
+                print("------------------")
+        else:
+            print("No employee details in the table!")
+    elif choice==2:
+        query="SELECT * from EMPLOYEE ORDER BY emp_salary DESC"
+        cursor.execute(query)
+        result=cursor.fetchall()
+        if result:
+            print("\nEmployee details sorting by Salary")
+            print("------------------------------------")
+            for row in result:
+                print("\nName:",row[1])
+                print("Salary:",row[2])
+                print("------------------")
+        else:
+            print("No employee data available!")
+    elif choice==3:
+        query="SELECT * from EMPLOYEE ORDER BY emp_dept"
+        cursor.execute(query)
+        result=cursor.fetchall()
+        if result:
+            print("\nEmployee details sorting by Department")
+            print("------------------------------------")
+            for row in result:
+                print("\nName:",row[1])
+                print("Department:",row[3])
+                print("------------------")
+        else:
+            print("No employee data available!")
+        cursor.close()
+def filter_employee():
+    cursor=mydb.cursor()
+    print("\n1.Filter by Salary\n2.Fiter By department")
+    choice=int(input("Enter your choice:"))
+    if choice==1:
+        minrange=float(input("Enter minimum salary range:"))
+        maxrange=float(input("Enter maximum salary range:"))
+        query="SELECT emp_name,emp_salary FROM EMPLOYEE where emp_salary BETWEEN %s and %s"
+        values=(minrange,maxrange)
+        cursor.execute(query,values)
+    
+        result=cursor.fetchall()
+        if result:
+            print("Employees with salary in given range")
+            print("------------------------------------")
+            for row in result:
+                print("Name:",row[0])
+                print("Salary:",row[1])
+                print("------------------")
+        else:
+            print("No employees in this salary range!")
+    elif choice==2:
+        dept=input("Enter the Department:")
+        query="SELECT emp_name,emp_dept FROM EMPLOYEE WHERE emp_dept=%s"
+        data=(dept,)
+        cursor.execute(query,data)
+        result=cursor.fetchall()
+        if result:
+            print("\nEmployee details of department of",dept)
+            print("-----------------------------------")
+            for row in result:
+                print("Name:",row[0])
+                print("Department:",row[1])
+                print("---------------------")
+        else:
+            print("No employees in this department!")
+    else:
+        print("\nInvalid choice!")
+    cursor.close()
+def update_employee():
+    cursor=mydb.cursor()
+    id1=int(input("Enter Employee Id:"))
+    list_query="SELECT * FROM EMPLOYEE WHERE emp_id=%s"
+    data=(id1,)
+    cursor.execute(list_query,data)
+    result=cursor.fetchall()
+    if result:
+        print("\nEmployee details:")
+        print("-----------------\n")
+        for row in result:
+            print("Employee id:",row[0])
+            print("Employee name:",row[1])
+            print("Salary:",row[2])
+            print("Department:",row[3])
+            print("Email-id:",row[4])
+            print("------------------")
+    else:
+        print("No matching employees found!")
+    print("\nChoose the data that you want to update")
+    print("1.Employee name\n2.Department\n3.Salary\n4.Emai-id\n5.Exit")
+    choice=int(input("\nEnter your choice:"))
+    if choice==1:
+        name=input("\nEnter the new name:")
+        query="UPDATE EMPLOYEE SET emp_name = %s WHERE emp_id = %s"
+        values=(name,id1)
+        cursor.execute(query,values)
+        mydb.commit()
+        print("\nEmployee name updated successfully!")
+    elif choice==2:
+        dept=input("\nEnter the new department name:")
+        query="UPDATE employee SET emp_dept = %s WHERE emp_id = %s"
+        values=(dept,id1)
+        cursor.execute(query,values)
+        mydb.commit()
+        print("\nDepartment name updated successfully!")
+    elif choice==3:
+        salary=float(input("\nEnter the new salary:"))
+        query="UPDATE employee SET emp_salary = %s WHERE emp_id = %s"
+        values=(salary,id1)
+        cursor.execute(query,values)
+        mydb.commit()
+        print("\nSalary updated successfully!")
+    elif choice==4:
+        mail=input("\nEnter the new email-id:")
+        query="UPDATE employee SET email = %s WHERE emp_id = %s"
+        values=(mail,id1)
+        cursor.execute(query,values)
+        mydb.commit()
+        print("\nEmail-id updated successfully!")
+    elif choice==5:
+        sys.exit()
+    else:
+        print("\nInvalid choice!")
+    cursor.close()
+def delete_employee():
+    cursor=mydb.cursor()
+    id1=int(input("Enter Employee Id:"))
+    query="DELETE from EMPLOYEE WHERE emp_id = %s"
+    value=(id1,)
+    cursor.execute(query,value)
+    mydb.commit()
+    print("\nEmployee details deleted successfully!")
+    cursor.close()
+def employee_details():
+    cursor=mydb.cursor()
+    query="SELECT * FROM EMPLOYEE"
+    cursor.execute(query)
+    result=cursor.fetchall()
+    if result:
+        print("\nEmployee details:")
+        print("-----------------\n")
+        for row in result:
+            print("Employee id:",row[0])
+            print("Employee name:",row[1])
+            print("Salary:",row[2])
+            print("Department:",row[3])
+            print("Email-id:",row[4])
+            print("------------------")
+    else:
+        print("No matching employees found!")
+    cursor.close()
+if __name__=="__main__":
+    while True:
+        print("\nEmployee Management system..")
+        print("-------------------------------")
+        print("\n---MENU---\n")
+        print("1.Add new Employee")
+        print("2.Update existing Employee details")
+        print("3.Sort Employee details")
+        print("4.Filter Employee details")
+        print("5.Delete an Employee")
+        print("6.List Employee details")
+        print("7.Exit")
+        ch=int(input("Enter your choice: "))
+        if ch==1:
+            add_employee()
+        elif ch==2:
+            update_employee()
+        elif ch==3:
+            sort_employee()
+        elif ch==4:
+            filter_employee()
+        elif ch==5:
+            delete_employee()
+        elif ch==6:
+            print("List of all employee details")
+            print("----------------------------")
+            employee_details()
+        elif ch==7:
+            break
+        else:
+            print("Invalid choice!Enter again!")
+
+
+
+OUTPUT
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 1
+
+Employee Id:9
+Employee Name:Meav
+Enter Department:Sales
+Enter Salary:25000.00
+Enter Email-id:maev34@gmail.com
+
+Employee details added successfully!
+
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 2
+Enter Employee Id:9
+
+Employee details:
+-----------------
+
+Employee id: 9
+Employee name: Meav
+Salary: 25000.00
+Department: Sales
+Email-id: maev34@gmail.com
+------------------
+
+Choose the data that you want to update
+1.Employee name
+2.Department
+3.Salary
+4.Emai-id
+5.Exit
+
+Enter your choice:3
+
+Enter the new salary:28000.00
+
+Salary updated successfully!
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 3
+
+1.Sort by Name
+2.Sort by Salary
+3.Sort by Department
+
+Enter your choice:1
+
+Employees details sorting by Name..
+------------------------------------
+Name: ANOOP
+Salary: 30000.00
+Department: MARKETING
+E-mail: SDS@GMAIL.COM
+------------------
+Name: Hrishi
+Salary: 55000.00
+Department: IT
+E-mail: hrishik34@gmail.com
+------------------
+Name: JOANNA
+Salary: 60000.00
+Department: HR
+E-mail: ABC@GMAIL.COM
+------------------
+Name: Joseph Doe
+Salary: 50000.00
+Department: IT
+E-mail: SSS@GMAIL.COM
+------------------
+Name: Krish
+Salary: 20000.00
+Department: Planning
+E-mail: krishk@gmail.com
+------------------
+Name: MAYA
+Salary: 40000.00
+Department: ENGINEERIN
+E-mail: LLL@GMAIL.COM
+------------------
+Name: Meav
+Salary: 28000.00
+Department: Sales
+E-mail: maev34@gmail.com
+------------------
+Name: Ryan
+Salary: 30000.00
+Department: Sales
+E-mail: ryan22@gmail.com
+------------------
+Name: SONY
+Salary: 60000.00
+Department: SALES
+E-mail: MMM@GMAIL.COM
+------------------
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 3
+
+1.Sort by Name
+2.Sort by Salary
+3.Sort by Department
+
+Enter your choice:2
+
+Employee details sorting by Salary
+------------------------------------
+
+Name: JOANNA
+Salary: 60000.00
+------------------
+
+Name: SONY
+Salary: 60000.00
+------------------
+
+Name: Hrishi
+Salary: 55000.00
+------------------
+
+Name: Joseph Doe
+Salary: 50000.00
+------------------
+
+Name: MAYA
+Salary: 40000.00
+------------------
+
+Name: ANOOP
+Salary: 30000.00
+------------------
+
+Name: Ryan
+Salary: 30000.00
+------------------
+
+Name: Meav
+Salary: 28000.00
+------------------
+
+Name: Krish
+Salary: 20000.00
+------------------
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 3
+
+1.Sort by Name
+2.Sort by Salary
+3.Sort by Department
+
+Enter your choice:3
+
+Employee details sorting by Department
+------------------------------------
+
+Name: MAYA
+Department: ENGINEERIN
+------------------
+
+Name: JOANNA
+Department: HR
+------------------
+
+Name: Joseph Doe
+Department: IT
+------------------
+
+Name: Hrishi
+Department: IT
+------------------
+
+Name: ANOOP
+Department: MARKETING
+------------------
+
+Name: Krish
+Department: Planning
+------------------
+
+Name: SONY
+Department: SALES
+------------------
+
+Name: Ryan
+Department: Sales
+------------------
+
+Name: Meav
+Department: Sales
+------------------
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 4
+
+1.Filter by Salary
+2.Fiter By department
+Enter your choice:1
+Enter minimum salary range:20000
+Enter maximum salary range:60000
+Employees with salary in given range
+------------------------------------
+Name: Joseph Doe
+Salary: 50000.00
+------------------
+Name: JOANNA
+Salary: 60000.00
+------------------
+Name: MAYA
+Salary: 40000.00
+------------------
+Name: SONY
+Salary: 60000.00
+------------------
+Name: ANOOP
+Salary: 30000.00
+------------------
+Name: Ryan
+Salary: 30000.00
+------------------
+Name: Krish
+Salary: 20000.00
+------------------
+Name: Hrishi
+Salary: 55000.00
+------------------
+Name: Meav
+Salary: 28000.00
+------------------
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 4
+
+1.Filter by Salary
+2.Fiter By department
+Enter your choice:2
+Enter the Department:IT
+
+Employee details of department of IT
+-----------------------------------
+Name: Joseph Doe
+Department: IT
+---------------------
+Name: Hrishi
+Department: IT
+---------------------
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 5
+Enter Employee Id:9
+
+Employee details deleted successfully!
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 6
+List of all employee details
+----------------------------
+
+Employee details:
+-----------------
+
+Employee id: 1
+Employee name: Joseph Doe
+Salary: 50000.00
+Department: IT
+Email-id: SSS@GMAIL.COM
+------------------
+Employee id: 2
+Employee name: JOANNA
+Salary: 60000.00
+Department: HR
+Email-id: ABC@GMAIL.COM
+------------------
+Employee id: 3
+Employee name: MAYA
+Salary: 40000.00
+Department: ENGINEERIN
+Email-id: LLL@GMAIL.COM
+------------------
+Employee id: 4
+Employee name: SONY
+Salary: 60000.00
+Department: SALES
+Email-id: MMM@GMAIL.COM
+------------------
+Employee id: 5
+Employee name: ANOOP
+Salary: 30000.00
+Department: MARKETING
+Email-id: SDS@GMAIL.COM
+------------------
+Employee id: 6
+Employee name: Ryan
+Salary: 30000.00
+Department: Sales
+Email-id: ryan22@gmail.com
+------------------
+Employee id: 7
+Employee name: Krish
+Salary: 20000.00
+Department: Planning
+Email-id: krishk@gmail.com
+------------------
+Employee id: 8
+Employee name: Hrishi
+Salary: 55000.00
+Department: IT
+Email-id: hrishik34@gmail.com
+------------------
+
+Employee Management system..
+-------------------------------
+
+---MENU---
+
+1.Add new Employee
+2.Update existing Employee details
+3.Sort Employee details
+4.Filter Employee details
+5.Delete an Employee
+6.List Employee details
+7.Exit
+Enter your choice: 7
