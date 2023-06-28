@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<title>EMS</title>
+<link rel="stylesheet" href="../static/css/studstyle.css">
+<head>
+</head>
+<body background="../static/img/bg6.jpg">
+<h1>Student Management</h1>
+<h2>Add A New Student</h2>
+<form action='/read' method="post">
+    <table>
+        <tr>
+            <td>
+                Student Id:
+            </td>
+            <td>
+                <input type="number" name="stud_id">
+            </td>
+        </tr>
+        <tr></tr>
+                <tr>
+            <td>
+                Student Name:
+            </td>
+            <td>
+                <input type="text" name="stud_name">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Age:
+            </td>
+            <td>
+                <input type="number" name="age">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Date Of Birth:
+            </td>
+            <td>
+                <input type="text" name="dob">
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                Guardian:
+            </td>
+            <td>
+                <input type="text" name="guardian">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Section:
+            </td>
+            <td>
+                <input type="text" name="section">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Email-id:
+            </td>
+            <td>
+                <input type="text" name="email">
+            </td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <td>
+            </td>
+            <td>
+                <input type="submit">
+            </td>
+        </tr>
+    </table>
+    {{msgdata}}
+</form>
+<p></p>
+<p></p>
+<a href="home1">Go Back</a>
+</body>
+</html>

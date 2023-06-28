@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<title>View All</title>
+<link rel="stylesheet" href="../static/css/studstyle.css">
+<head>
+</head>
+<body background="../static/img/bg7.jpg">
+<h1>Student Details</h1>
+<table border="1px">
+    <thead>
+        <tr>
+            <th>Stud_Id</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>DOB</th>
+            <th>Guardian</th>
+            <th>Section</th>
+            <th>E-mail</th>
+        </tr>
+    </thead>
+    {%for row in sqldata%}
+    <tr>
+        <td>{{row[0]}}</td>
+        <td>{{row[1]}}</td>
+        <td>{{row[2]}}</td>
+        <td>{{row[3]}}</td>
+        <td>{{row[4]}}</td>
+        <td>{{row[5]}}</td>
+        <td>{{row[6]}}</td>
+    </tr>
+    {%endfor%}
+</table>
+<p></p>
+<p></p>
+<a href="home1">Go Back</a>
+</body>
+</html>
